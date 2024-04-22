@@ -1,37 +1,41 @@
 import os
 import requests
-import shutil
-from urllib.parse import urljoin
-import bs4
 
-url = 'https://stevemorse.org/8086/'
+url = 'https://stevemorse.org/8086'
 
 # Making a new folder
-folder_name = '8086'
+folder_name = '8000'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 
-# Scraping information
-for p in range(1, 5):
-    page_url = urljoin(url, str(p) + '.jpg')
-    print('Downloading Page %s.....' % page_url)
-    
+# Scraping information for pages from 1001 to 1011
+for p in range(1001, 1012):
+    print('Downloading Page %s.....' % p)
+    page_url = f'{url}/{p}.jpg'
     try:
-        res = requests.get(page_url, headers={'User-Agent': 'Mozilla/5.0'})
+        res = requests.get(page_url)
         res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, 'html.parser')
-
-        image_url = urljoin(url, str(p) + '.jpg')
-        print('Downloading image %s.....' % image_url)
-        res = requests.get(image_url, headers={'User-Agent': 'Mozilla/5.0'})
-        res.raise_for_status()
-
-        with open(os.path.join(folder_name, os.path.basename(image_url)), 'wb') as image_file:
-            for chunk in res.iter_content(10000):
-                image_file.write(chunk)
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error downloading page {page_url}: {e}")
+    except requests.exceptions.HTTPError as e:
+        print(f"Failed to download page {page_url}: {e}")
         continue
+
+    image_path = os.path.join(folder_name, f'{p}.jpg')
+    with open(image_path, 'wb') as image_file:
+        image_file.write(res.content)
+
+# Scraping information for pages from 1 to 276
+for p in range(1, 277):
+    print('Downloading Page %s.....' % p)
+    page_url = f'{url}/{p}.jpg'
+    try:
+        res = requests.get(page_url)
+        res.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print(f"Failed to download page {page_url}: {e}")
+        continue
+
+    image_path = os.path.join(folder_name, f'{p}.jpg')
+    with open(image_path, 'wb') as image_file:
+        image_file.write(res.content)
 
 print('Done...')
