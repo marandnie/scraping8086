@@ -12,8 +12,8 @@ if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 
 # Scraping information
-for p in range(1, 277):
-    page_url = urljoin(url, str(p))
+for p in range(1, 5):
+    page_url = urljoin(url, str(p) + '.jpg')
     print('Downloading Page %s.....' % page_url)
     
     try:
