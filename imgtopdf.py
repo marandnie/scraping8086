@@ -4,8 +4,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
 def generate_image_paths(folder_name, start, end):
-    pattern = re.compile(r'^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{2}|2[0-6][0-9]|276|100[1-9]|10[1-9][0-9]|101[0-1])\.jpg$')
-    return [folder_name + str(i) + '.jpg' for i in range(start, end+1) if pattern.match(str(i) + '.jpg')]
+    return [f'{folder_name}{i}.jpg' for i in range(start, end+1)]
 
 def jpg_to_pdf(image_paths, pdf_path):
     c = canvas.Canvas(pdf_path, pagesize=A4)
